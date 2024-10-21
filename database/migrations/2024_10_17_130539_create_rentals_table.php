@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('car_per_agency_id');
-            $table->enum("status", ["rented", "returned"]);
+            $table->enum("status", ["reserved", "picked_up", "returned"]);
             $table->date("start");
             $table->date("end");
             $table->double("price");

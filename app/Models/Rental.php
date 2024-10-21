@@ -18,6 +18,15 @@ class Rental extends Model
         'price'
     ];
 
+    public static $validationRules=  [
+        'customer_id' => 'required|exists:customers,id',
+        'car_per_agency_id' => 'required|exists:agency_vehicule,id',
+        'status' => 'required|in:reserved,picked_up,returned',
+        'start' => 'required|date|date_format:Y-m-d|after_or_equal:today',
+        'end' => 'required|date|date_format:Y-m-d|after:start',
+        'price' => 'required|numeric|min:0',
+    ];
+
     public function carPerAgency()
     {
         return $this->belongsTo(CarPerAgency::class,'car_per_agency_id');

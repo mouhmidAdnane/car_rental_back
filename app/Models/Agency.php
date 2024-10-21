@@ -20,27 +20,41 @@ class Agency extends Model
         'city'
     ];
 
+
     public function carPerAgency(){
         return $this->hasMany(CarPerAgency::class, 'agency_id');
     }
 
-    public static function find_by_id($id){
+    public static function findById($id){
         return self::findOrFail($id);
     }
 
-
-    public static function get($filters= [] , $page=1, $perPage= null){
+    private static function queryBuilder($filters){
         $query = self::query();
         if (isset($filters['city'])) $query->where('city', $filters['city']);
+        if (isset($filters['name'])) {
+            $query->where('name', 'like', '%' . $filters['name'] . '%');
+        }
+
+        return $query;
+    }
+
+    public static function get($filters= [] , $page=1, $perPage= null){
+        $query = self::queryBuilder($filters);
         if ($perPage) return $query->paginate($perPage, ['*'], 'page', $page);
         return $query->get();
     }
 
 
-    public static function delete_by_id($id){
-
+    public static function deleteById($id){
         $deletedRecords= self::destroy($id);
-        if(!$deletedRecords) throw new \Exception("Failed to delete");
+        if($deletedRecords === 0) throw new \Exception("Failed to delete");
         return true;
     }
+
+    public static function updateById($agency, $data){
+        if($agency->update($data)) return true;
+        throw new \Exception("Failed to update");
+    }
+
 }

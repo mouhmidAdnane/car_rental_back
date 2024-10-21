@@ -15,7 +15,10 @@ class CategorySeeder extends Seeder
     {
         Category::create([
             'name' => 'SUV',
-            'image' => null,
+        ]);
+        
+        Category::create([
+            'name' => 'sport',
         ]);
     }
 }
