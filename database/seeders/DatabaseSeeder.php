@@ -11,6 +11,10 @@ class DatabaseSeeder extends Seeder
     /**
      * Seed the application's database.
      */
+
+
+    //run php artisan migrate:fresh before seeding
+
     public function run(): void
     {
         $this->call([

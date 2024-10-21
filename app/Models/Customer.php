@@ -21,6 +21,17 @@ class Customer extends Model
         'birth_date',
     ];
 
+    public static $validationRules = [
+        'first_name' => 'required|string|max:255',
+        'last_name' => 'required|string|max:255',
+        'gender' => 'required | in :0,1',
+        'email' => 'required|email|max:255|unique:your_table_name,email',
+        'phone' => 'nullable|string|max:20', 
+        'adress' => 'nullable|string|max:255',
+        'city' => 'required|string|max:100',
+        'birth_date' => 'required|date|date_format:Y-m-d|before:today',
+    ];
+
     public function rentals(){
         return $this->hasMany(Rental::class, 'customer_id');
     }

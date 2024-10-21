@@ -3,13 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Interfaces\RepositoryInterface;
 
-class CarPerAgency extends Model
+class CarPerAgency extends Model implements RepositoryInterface
 {
 
     protected $table = 'agency_vehicule';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
+    public $timestamps = true;
 
     protected $fillable = [
         'agency_id',
@@ -22,6 +24,8 @@ class CarPerAgency extends Model
         'color',
         'price_per_day',
     ];
+    
+
 
     public function rental(){
         return $this->hasMany(Rental::class, 'car_per_agency_id');
@@ -36,41 +40,42 @@ class CarPerAgency extends Model
         return $this->belongsTo(Agency::class,'car_per_agency_id');
     }
 
-    public static function find_by_id($id){
+
+    public static function findById($id){
         return self::findOrFail($id);
     }
 
-
     private static function queryBuilder($filters){
-        $query = self::query()->with('vehicule');
-        if (isset($filters['available'])) {
-            $query->where('available', $filters['available'] > 0);
-        }
+        $query = self::query()->with('vehicule.category:id,name');
+       
+        if (isset($filters['available'])){
+            $operation= $filters['available'] ? '>' : '=';
+            $filters['available'] ?? $query->where('available',  $operation , '0');
+        }   
         if (isset($filters['reserved'])) {
-            $query->where('reserved', $filters['reserved'] > 0);
+            $operation = $filters['reserved'] ? '>' : '=';
+            $query->where('reserved', $operation, '0');
         }
+        
         if (isset($filters['picked_up'])) {
-            $query->where('picked_up', $filters['picked_up'] > 0);
+            $operation = $filters['picked_up'] ? '>' : '=';
+            $query->where('picked_up', $operation, '0');
         }
+        
+        if (isset($filters['agency_id']))   $query->where('agency_id', $filters['agency_id']);
 
         return $query;
     }
 
-    public static function getCarsByAgency($agencyId, $filters = [], $page = 1, $perPage = null){
-        $query = self::queryBuilder($filters)->where('agency_id', $agencyId);
-        return $perPage ? $query->paginate($perPage, ['*'], 'page', $page) : $query->get();
-    }
-
     public static function get($filters= [] , $page=1, $perPage= null){
-        $query = self::queryBuilder($filters);
+        $query = self::queryBuilder($filters)->orderBy('agency_id', 'asc');
         return $perPage ? $query->paginate($perPage, ['*'], 'page', $page) : $query->get();
     }
 
 
-    public static function delete_by_id($id){
-
+    public static function deleteById($id){
         $deletedRecords= self::destroy($id);
-        if(!$deletedRecords) throw new \Exception("Failed to delete");
+        if($deletedRecords === 0) throw new \Exception("Failed to delete");
         return true;
     }
 

@@ -10,15 +10,21 @@ class Category extends Model implements RepositoryInterface
 
     protected $table = 'categories';
     protected $primaryKey = 'id';
-    protected $guarded = 'id';
+    protected $guarded = ['id'];
     protected $fillable = ['name', 'image'];
+
+
+    public static $rules = [
+        'name' => 'required|string|max:255',
+        'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    ];
 
     public function vehicules()
     {
         return $this->hasMany(Vehicule::class);
     }
 
-    public static function find_by_id($id){
+    public static function findById($id){
         return self::findOrFail($id);
     }
 
@@ -30,7 +36,7 @@ class Category extends Model implements RepositoryInterface
     }
 
 
-    public static function delete_by_id($id){
+    public static function deleteById($id){
 
         $deletedRecords= self::destroy($id);
         if(!$deletedRecords) throw new \Exception("Failed to delete");

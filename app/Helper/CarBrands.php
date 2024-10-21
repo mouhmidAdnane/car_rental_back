@@ -9,14 +9,15 @@ class CarBrands{
         "bmw",
         "chevrolet",
         "citroen",
-        "fiat", "ford",
+        "fiat", 
+        "ford",
         "honda",
         "hyundai" ,
         "jaguar" ,
         "kia",
         "mercedes",
         "nissan",
-        "peugeot"
+        "peugeot",
     ];
 
 }

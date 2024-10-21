@@ -15,7 +15,6 @@ class AgencySeeder extends Seeder
             'url' => 'http://agencyone.com',
             'email' => 'contact@agencyone.com',
             'phone' => '123456789',
-            'image' => 'agency_one.jpg',
             'city' => 'City One',
         ]);
 
@@ -24,8 +23,14 @@ class AgencySeeder extends Seeder
             'url' => 'http://agencytwo.com',
             'email' => 'contact@agencytwo.com',
             'phone' => '987654321',
-            'image' => 'agency_two.jpg',
             'city' => 'City Two',
+        ]);
+        Agency::create([
+            'name' => 'Agency Three',
+            'url' => 'http://agencythree.com',
+            'email' => 'contact@agencythree.com',
+            'phone' => '9452264321',
+            'city' => 'City Three',
         ]);
         
     }
